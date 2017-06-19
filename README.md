@@ -18,4 +18,7 @@ If you satisfy the result, close the graph and confirm to continue. The applicat
 # Warning:
 The latest matplotlib version uses TkAgg as its default backend, and this code will not run successfully with this configuration.  
 If you want to run the script instead of the executable, change the backend to Qt4Agg.  
-The matplotlib config file is located at: %PYTHONPATH%\Lib\site-packages\matplotlib\mpl-data\matplotlibrc
+The matplotlib config file is located at: %PYTHONPATH%\Lib\site-packages\matplotlib\mpl-data\matplotlibrc  
+Or, you can simply add the following lines at the begining of the script:  
+- import matplotlib
+- matplotlib.use('QT4Agg')
