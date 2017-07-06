@@ -1,5 +1,9 @@
 # EmpCorrect_App
 Use empirical line correction method to convert mosaic image to at-surface reflectance image
+# Update
+- The lastest source code assigns QT4Agg as the default backend.  
+- Replace os.system with subprocess.run to execute exiftool.  
+- Correct Syntax to copy XMP metadata
 
 # This is my first GUI application so that I just take any modules for quick development.
 # Any Suggestion for improvement is welcome
@@ -14,11 +18,3 @@ Use mode 1 to zoom with mouse drag (right click to reset view), and mode 0 to dr
 After drawing the area of interest, input the at-surface reflectance value for those pixels.  
 When finish, press "ESC" and it will generate the linear regression graph.  
 If you satisfy the result, close the graph and confirm to continue. The application will apply the linear equation to calculate the at-surface reflectance image.  
-
-# Warning:
-The latest matplotlib version uses TkAgg as its default backend, and this code will not run successfully with this configuration.  
-If you want to run the script instead of the executable, change the backend to Qt4Agg.  
-The matplotlib config file is located at: %PYTHONPATH%\Lib\site-packages\matplotlib\mpl-data\matplotlibrc  
-Or, you can simply add the following lines at the begining of the script:  
-- import matplotlib
-- matplotlib.use('QT4Agg')
