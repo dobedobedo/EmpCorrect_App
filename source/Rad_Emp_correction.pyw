@@ -1,15 +1,10 @@
 #!/usr/bin/python3
-
 # -*- coding: utf-8 -*-
-"""
-The mosaic has actually nodata value at 0.
-However, due to some technical issue, it is set to some other value automatically.
-Therefore, the nodata value is set manually here.
-0 for mosaic
--10000 for reflectnace image
-you can change the extraction method by uncomment the ndv sourcecode.
-"""
+import matplotlib
+matplotlib.use('QT4Agg')
+
 import os
+import subprocess
 import numpy as np
 import numpy.ma as ma
 from scipy.optimize import curve_fit
@@ -44,8 +39,7 @@ def Read_Image(filename):
     bands = []
     for band in range(channel):
         bands.append(InputFile.GetRasterBand(band+1))
-    #ndv = bands[band].GetNoDataValue() #Get nodata automatically
-    ndv = 0   #Set nodata manually to 0, which is the usual situation
+    ndv = bands[band].GetNoDataValue()
     if channel <= 2:
         image = np.zeros((rows,cols), dtype=InputFile.ReadAsArray().dtype)
     else:
@@ -351,21 +345,22 @@ def Plot_Line(DN, reflectance):
 
 gdal.AllRegister()
 tk.Tk().withdraw()
+Fullfilename=askopenfilename()
+'''
 Fullfilename=askopenfilename(filetypes=[(
         "Common 8-bit images","*.jpg;*.jpeg;*.png"),("Tiff","*.tif;*.TIF")])
+'''
 try:
     path, filename = os.path.split(Fullfilename)
     filename, ext = os.path.splitext(filename)
     OutFile = os.path.join(path,filename+'_out.tif')
     image, ndv, alpha, GeoTransform, Projection, driver = \
         Read_Image(os.path.join(path, filename+ext))
-    
-    if ndv is not None:
+    if ndv:
         image = ma.masked_values(image,ndv)
         image_used = image.filled(0)
     else:
         image_used = image.copy()
-    
     if alpha is not None:
         if alpha.max() != np.iinfo(alpha.dtype).max:
             alpha[alpha==alpha.max()] = np.iinfo(alpha.dtype).max
@@ -379,14 +374,14 @@ try:
             "Use scroll bar to change mode:\n\n"
             "mode 0: draw polygon for regions of interest, right click to finish\n"
             "mode 1: zoom with rectangle, right click to reset extent\n\n"
-            "When finish, press ESC to continue.")
+            "When finish, press ESC or close \"Original\" window to continue.")
     cv2.namedWindow("Original", cv2.WINDOW_NORMAL)
     
     cv2.createTrackbar("mode", "Original", 0, 1, mode_switch)
     
     cv2.setMouseCallback("Original", draw_polygon)
     
-    while cv2.getWindowProperty("Original", 0) >= 0:
+    while(cv2.getWindowProperty("Original", 0) >= 0):
         cv2.imshow("Original", temp)
         key = cv2.waitKey(0) & 0xFF
         if key == 27:
@@ -409,9 +404,8 @@ try:
             #Reduce precision to decrease file size
             image = image.astype(np.float32)
             
-            if ndv is not None:
-                #image = image.filled(ndv)
-                image = image.filled(-10000) #nodata is set to -10000 for reflectance image
+            if ndv:
+                image = image.filled(ndv)
                 
             if len(image.shape) > 2:
                 band = image.shape[2]
@@ -430,26 +424,22 @@ try:
                     OutImage.GetRasterBand(1).WriteArray(image[:,:])
                 except:
                     OutImage.GetRasterBand(1).WriteArray(image[:,:,0])
-                if ndv is not None:
-                        #OutImage.GetRasterBand(1).SetNoDataValue(ndv)
-                        OutImage.GetRasterBand(1).SetNoDataValue(-10000)
+                if ndv:
+                        OutImage.GetRasterBand(1).SetNoDataValue(ndv)
             else:
                 for i in range(band):
                     OutImage.GetRasterBand(i+1).WriteArray(image[:,:,i])
-                    if ndv is not None:
-                        #OutImage.GetRasterBand(i+1).SetNoDataValue(ndv)
-                        OutImage.GetRasterBand(i+1).SetNoDataValue(-10000)
-                        
+                    if ndv:
+                        OutImage.GetRasterBand(i+1).SetNoDataValue(ndv)
             OutImage.SetGeoTransform(GeoTransform)
             OutImage.SetProjection(Projection)
         
             OutImage = None
-            os.system(
-                    "exiftool -tagsFromFile \"{Src}\" -all:all "
-                    "-tagsFromFile \"{Src}\" -xmp:all \"{Dst}\" && "
-                    "exiftool -delete_original! \"{Dst}\"".format(
-                            Src=Fullfilename, 
-                            Dst=OutFile))
+            
+            #Use exiftool to copy metadata
+            subprocess.run(['exiftool', '-tagsFromFile', Fullfilename, '-ALL', '-XMP', OutFile])
+            subprocess.run(['exiftool', '-delete_original!', OutFile])
+            
             messagebox.showinfo("Done!", 
                                 "Image is saved as {}_out.tif".format(filename))
         else:
@@ -458,6 +448,5 @@ try:
     else:
         messagebox.showinfo("Discard!", 
                                 "Too few sample points. No output image is created.")
-
 except:
     messagebox.showinfo("Discard!", "No image is selected.")
