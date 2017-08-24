@@ -356,7 +356,7 @@ try:
     OutFile = os.path.join(path,filename+'_out.tif')
     image, ndv, alpha, GeoTransform, Projection, driver = \
         Read_Image(os.path.join(path, filename+ext))
-    if ndv:
+    if ndv is not None:
         image = ma.masked_values(image,ndv)
         image_used = image.filled(0)
     else:
@@ -404,7 +404,7 @@ try:
             #Reduce precision to decrease file size
             image = image.astype(np.float32)
             
-            if ndv:
+            if ndv is not None:
                 image = image.filled(ndv)
                 
             if len(image.shape) > 2:
