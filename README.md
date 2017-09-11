@@ -9,9 +9,9 @@ Use empirical line correction method to convert mosaic image to at-surface refle
 # This is my first GUI application so that I just take any modules for quick development.
 # Any Suggestion for improvement is welcome
 
-Note: The script is coded in Python 3.6 environment on Windows 10 64-bit, and only tested on Windows and Linux (Ubuntu 16.04 with Python 3.5). The script may not work on other platform.
-Therefore, use the executable as preference.  
-Dependency: numpy, scipy, opencv, gdal, matplotlib  
+Note: The script is coded in Python 3.6 environment on Windows 10 64-bit, and only tested on Windows and Linux (Ubuntu 16.04 with Python 3.5). The script may not work on other platform.  
+Please download exiftool from https://sno.phy.queensu.ca/~phil/exiftool/    
+__Dependency: numpy, scipy, opencv, gdal, matplotlib, PyQt5__  
 
 # Usage:
 Download the build folder and the Windows short cut for quick usage. Double click the short cut to execute the application.  
