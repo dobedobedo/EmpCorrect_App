@@ -1,14 +1,15 @@
 # EmpCorrect_App
 Use empirical line correction method to convert mosaic image to at-surface reflectance image
 # Update
-- The lastest source code assigns QT4Agg as the default backend.  
+- Remove executable since python crash every time when I try to build it
+- The lastest source code assigns QT5Agg as the default backend.  
 - Replace os.system with subprocess.run to execute exiftool.  
 - Correct Syntax to copy XMP metadata
 
 # This is my first GUI application so that I just take any modules for quick development.
 # Any Suggestion for improvement is welcome
 
-Note: The script is coded in Python 3.6 environment on Windows 10 64-bit, and the script may not work on version < 3.5 or other platform.
+Note: The script is coded in Python 3.6 environment on Windows 10 64-bit, and only tested on Windows and Linux (Ubuntu 16.04 with Python 3.5). The script may not work on other platform.
 Therefore, use the executable as preference.  
 Dependency: numpy, scipy, opencv, gdal, matplotlib  
 
