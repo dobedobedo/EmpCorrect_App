@@ -14,7 +14,7 @@ Please download exiftool from https://sno.phy.queensu.ca/~phil/exiftool/
 __Dependency: numpy, scipy, opencv, gdal, matplotlib, PyQt5__  
 
 # Usage:
-Download the build folder and the Windows short cut for quick usage. Double click the short cut to execute the application.  
+Double click the script to execute the application. Otherwise, use _python3_ in command line (or _python_ if you only install python3 in your computer)   
 Use mode 1 to zoom with mouse drag (right click to reset view), and mode 0 to draw polygon to specify pixels (right click to finish drawing).  
 After drawing the area of interest, input the at-surface reflectance value for those pixels.  
 When finish, press "ESC" and it will generate the linear regression graph.  
