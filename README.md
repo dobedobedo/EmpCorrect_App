@@ -4,8 +4,8 @@ Use empirical line correction method to convert mosaic image to at-surface refle
 ===== 14/9/2017 =====
 - Disable opencv QT context menu when right click
 - Make "Original" window automatically appear at the centre of screen, and resize to 2/3 screen size
-- Add support to numpad Enter input  
-- Add the function to adjust brightness (0-300%)  
+- Add support to numpad Enter in _Reflectance_ input box  
+- Add the function to adjust display brightness (0-300%)  
   
 ===== 11/9/2017 =====  
 - Remove executable since python crash every time when I try to build it 
