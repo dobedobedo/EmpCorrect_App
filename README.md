@@ -1,6 +1,7 @@
 # EmpCorrect_App
 Use empirical line correction method to convert mosaic image to at-surface reflectance image
 # Update
+- Add the function to adjust brightness (0-300%)
 - Remove executable since python crash every time when I try to build it
 - The lastest source code assigns QT5Agg as the default backend.  
 - Replace os.system with subprocess.run to execute exiftool.  

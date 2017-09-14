@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 # -*- coding: utf-8 -*-
 """
@@ -77,7 +77,7 @@ def Read_Image(filename):
 
 #draw polygon or zoom by rectangle depend on the switch trackbar
 def draw_polygon(event,x,y,flags,param):
-    global drawing, mode, roi_corners, ix, iy, i, temp, temp_zoom, mean_DN, reflectance
+    global drawing, mode, roi_corners, ix, iy, i, temp, temp_zoom, mean_DN, reflectance, brightness
         
     if event == cv2.EVENT_LBUTTONDOWN:
         drawing = True
@@ -95,11 +95,15 @@ def draw_polygon(event,x,y,flags,param):
             draw_image = temp.copy()
             if mode == True:
                 cv2.line(draw_image, roi_corners[-1], (x,y), (0,160,0), 1)
-                cv2.imshow("Original", draw_image)
+                cv2.imshow("Original", (np.clip(draw_image*brightness, 
+                                                np.iinfo(temp.dtype).min, 
+                                                np.iinfo(temp.dtype).max)).astype(temp.dtype))
             else:
                 cv2.rectangle(draw_image, (ix,iy), (x,y), (0,0,160), -1)
                 cv2.addWeighted(draw_image, 0.4, temp, 0.6, 0, draw_image)
-                cv2.imshow("Original", draw_image)
+                cv2.imshow("Original", (np.clip(draw_image*brightness, 
+                                                np.iinfo(temp.dtype).min, 
+                                                np.iinfo(temp.dtype).max)).astype(temp.dtype))
 
     elif event == cv2.EVENT_LBUTTONUP:
         if mode == True:
@@ -112,7 +116,9 @@ def draw_polygon(event,x,y,flags,param):
                         if error_code == 1:
                             drawing = False
                             temp = temp_zoom.copy()
-                            cv2.imshow("Original", temp)
+                            cv2.imshow("Original", (np.clip(temp*brightness, 
+                                                            np.iinfo(temp.dtype).min, 
+                                                            np.iinfo(temp.dtype).max)).astype(temp.dtype))
                             roi_corners = []
                             messagebox.showinfo("Warning",
                                         "Polygon cannot be self-intersected!")
@@ -120,7 +126,9 @@ def draw_polygon(event,x,y,flags,param):
                         elif error_code == 2:
                             drawing = False
                             temp = temp_zoom.copy()
-                            cv2.imshow("Original", temp)
+                            cv2.imshow("Original", (np.clip(temp*brightness, 
+                                                            np.iinfo(temp.dtype).min, 
+                                                            np.iinfo(temp.dtype).max)).astype(temp.dtype))
                             roi_corners = []
                             messagebox.showinfo("Warning",
                                         "Duplicated edges!")
@@ -128,18 +136,24 @@ def draw_polygon(event,x,y,flags,param):
                     if error_code == 0:
                         cv2.line(temp, roi_corners[-2], 
                                  roi_corners[-1], (0,160,0), 1)
-                        cv2.imshow("Original", temp)
+                        cv2.imshow("Original", (np.clip(temp*brightness, 
+                                                        np.iinfo(temp.dtype).min, 
+                                                        np.iinfo(temp.dtype).max)).astype(temp.dtype))
                 else:
                     cv2.line(temp, roi_corners[-2], 
                              roi_corners[-1], (0,160,0), 1)
-                    cv2.imshow("Original", temp)
+                    cv2.imshow("Original", (np.clip(temp*brightness, 
+                                                    np.iinfo(temp.dtype).min, 
+                                                    np.iinfo(temp.dtype).max)).astype(temp.dtype))
         else:
             rect = (min(ix,x),min(iy,y),abs(ix-x),abs(iy-y))
             x1, y1, w, h = rect
             if w != 0 and h != 0:
                 temp = temp[y1:y1+h, x1:x1+w]
                 temp_zoom = temp.copy()
-            cv2.imshow("Original", temp)
+            cv2.imshow("Original", (np.clip(temp*brightness, 
+                                            np.iinfo(temp.dtype).min, 
+                                            np.iinfo(temp.dtype).max)).astype(temp.dtype))
             drawing = False
 
     elif event == cv2.EVENT_RBUTTONDOWN:
@@ -149,7 +163,9 @@ def draw_polygon(event,x,y,flags,param):
                 messagebox.showinfo("Warning",
                                     "You need at least 3 points to form a polygon!")
                 temp = temp_zoom.copy()
-                cv2.imshow("Original", temp)
+                cv2.imshow("Original", (np.clip(temp*brightness, 
+                                                np.iinfo(temp.dtype).min, 
+                                                np.iinfo(temp.dtype).max)).astype(temp.dtype))
                 roi_corners = []
             else:
                 roi_corners.append(roi_corners[0])
@@ -159,34 +175,44 @@ def draw_polygon(event,x,y,flags,param):
                             , roi_corners[-2], roi_corners[-1])
                     if error_code == 1:
                         temp = temp_zoom.copy()
-                        cv2.imshow("Original", temp)
+                        cv2.imshow("Original", (np.clip(temp*brightness, 
+                                                        np.iinfo(temp.dtype).min, 
+                                                        np.iinfo(temp.dtype).max)).astype(temp.dtype))
                         roi_corners = []
                         messagebox.showinfo("Warning",
                                     "Polygon cannot be self-intersected!")
                         break
                     elif error_code == 2:
                         temp = temp_zoom.copy()
-                        cv2.imshow("Original", temp)
+                        cv2.imshow("Original", (np.clip(temp*brightness, 
+                                                        np.iinfo(temp.dtype).min, 
+                                                        np.iinfo(temp.dtype).max)).astype(temp.dtype))
                         roi_corners = []
                         messagebox.showinfo("Warning",
                                     "Duplicated edges!")
                         break
                 if error_code == 0:
                     cv2.line(temp, roi_corners[-2], roi_corners[-1], (0,160,0), 1)
-                    cv2.imshow("Original", temp)
+                    cv2.imshow("Original", (np.clip(temp*brightness, 
+                                                    np.iinfo(temp.dtype).min, 
+                                                    np.iinfo(temp.dtype).max)).astype(temp.dtype))
                     temp = temp_zoom.copy()
                     mask = create_mask(temp.shape, roi_corners, temp.dtype)
                     masked_image = cv2.bitwise_and(temp, mask)
                     mean_DN.append(ma.array(temp, mask=np.invert(mask)).mean())
                     reflectance.append(Ref_inputBox())
                     cv2.namedWindow("ROI {}".format(i),cv2.WINDOW_NORMAL)
-                    cv2.imshow("ROI {}".format(i), masked_image)
+                    cv2.imshow("ROI {}".format(i), (np.clip(masked_image*brightness, 
+                               np.iinfo(masked_image.dtype).min, 
+                               np.iinfo(masked_image.dtype).max)).astype(masked_image.dtype))
                     roi_corners = []
                     i = i + 1
         else:
             temp = image_used.copy()
             temp_zoom = temp.copy()
-            cv2.imshow("Original", temp)
+            cv2.imshow("Original", (np.clip(temp*brightness, 
+                                            np.iinfo(temp.dtype).min, 
+                                            np.iinfo(temp.dtype).max)).astype(temp.dtype))
 
 def create_mask(shape, roi_corners, img_type):
     mask = np.zeros(shape, dtype=img_type)
@@ -202,15 +228,24 @@ def create_mask(shape, roi_corners, img_type):
     return mask
 
 def mode_switch(x):
-    global mode, roi_corners, drawing
+    global mode, roi_corners, drawing, brightness
     drawing = False
     temp = temp_zoom.copy()
-    cv2.imshow("Original", temp)
+    cv2.imshow("Original", (np.clip(temp*brightness, 
+                                    np.iinfo(temp.dtype).min, 
+                                    np.iinfo(temp.dtype).max)).astype(temp.dtype))
     if x == 0:
         mode = True
     else:
         mode = False
     roi_corners = []
+
+def adjust_brightness(x):
+    global brightness
+    brightness = x/100.0
+    cv2.imshow("Original", (np.clip(temp*brightness, 
+                                    np.iinfo(temp.dtype).min, 
+                                    np.iinfo(temp.dtype).max)).astype(temp.dtype))
 
 def line_check(pt1, pt2, pt3, pt4):
     error_code = 0
@@ -360,7 +395,7 @@ def Plot_Line(DN, reflectance):
 
     plt.show()
     return popt
-
+    
 gdal.AllRegister()
 tk.Tk().withdraw()
 '''
@@ -398,6 +433,7 @@ try:
     cv2.namedWindow("Original", cv2.WINDOW_NORMAL)
     
     cv2.createTrackbar("mode", "Original", 0, 1, mode_switch)
+    cv2.createTrackbar("brightness%", "Original", 100, 300, adjust_brightness)
     
     cv2.setMouseCallback("Original", draw_polygon)
     
@@ -407,6 +443,7 @@ try:
         if key == 27:
             break
         cv2.getTrackbarPos("mode", "Original")
+        cv2.getTrackbarPos("brightness%", "Original")
     
     cv2.destroyAllWindows()
     
