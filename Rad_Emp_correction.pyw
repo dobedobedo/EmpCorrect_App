@@ -35,6 +35,7 @@ ix, iy = -1, -1
 i = 1
 mean_DN = []
 reflectance = []
+brightness = 1.0
 
 #Read image using GDAL to avoid unusual bands problem by opencv
 def Read_Image(filename):
@@ -298,6 +299,7 @@ def Ref_inputBox():
             self.l.pack()
             self.e=tk.Entry(self, width=30)
             self.e.bind('<Return>', self.cleanup)
+            self.e.bind('<KP_Enter>', self.cleanup)
             self.e.pack()
             self.b=tk.Button(self,text="Ok", width=40, height=2)
             self.b.bind('<Button-1>', self.cleanup)
