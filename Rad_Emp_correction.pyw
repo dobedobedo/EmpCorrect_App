@@ -32,7 +32,6 @@ drawing = False
 mode = True
 roi_corners = []
 ix, iy = -1, -1
-i = 1
 mean_DN = []
 reflectance = []
 brightness = 1.0
@@ -78,7 +77,7 @@ def Read_Image(filename):
 
 #draw polygon or zoom by rectangle depend on the switch trackbar
 def draw_polygon(event,x,y,flags,param):
-    global drawing, mode, roi_corners, ix, iy, i, temp, temp_zoom, mean_DN, reflectance, brightness
+    global drawing, mode, roi_corners, ix, iy, temp, temp_zoom, mean_DN, reflectance, brightness
         
     if event == cv2.EVENT_LBUTTONDOWN:
         drawing = True
@@ -202,12 +201,10 @@ def draw_polygon(event,x,y,flags,param):
                     masked_image = cv2.bitwise_and(temp, mask)
                     mean_DN.append(ma.array(temp, mask=np.invert(mask)).mean())
                     reflectance.append(Ref_inputBox())
-                    cv2.namedWindow("ROI {}".format(i),cv2.WINDOW_NORMAL)
-                    cv2.imshow("ROI {}".format(i), (np.clip(masked_image*brightness, 
-                               np.iinfo(masked_image.dtype).min, 
-                               np.iinfo(masked_image.dtype).max)).astype(masked_image.dtype))
+                    WindowName = "DN:{}, reflectance:{}".format(int(mean_DN[-1]), reflectance[-1])
+                    cv2.namedWindow(WindowName, cv2.WINDOW_NORMAL)
+                    cv2.imshow(WindowName, masked_image)
                     roi_corners = []
-                    i = i + 1
         else:
             temp = image_used.copy()
             temp_zoom = temp.copy()

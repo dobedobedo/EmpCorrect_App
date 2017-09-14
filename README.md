@@ -2,6 +2,7 @@
 Use empirical line correction method to convert mosaic image to at-surface reflectance image
 # Changelog
 ===== 14/9/2017 =====
+- Change ROI window's title to DN and reflectance value
 - Disable opencv QT context menu when right click
 - Make "Original" window automatically appear at the centre of screen, and resize to 2/3 screen size
 - Add support to numpad Enter in _Reflectance_ input box  
