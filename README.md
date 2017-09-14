@@ -1,9 +1,16 @@
 # EmpCorrect_App
 Use empirical line correction method to convert mosaic image to at-surface reflectance image
 # Changelog
-- Add support to numpad Enter input
-- Add the function to adjust brightness (0-300%)
-- Remove executable since python crash every time when I try to build it
+===== 14/9/2017 =====
+- Disable opencv QT context menu when right click
+- Make "Original" window automatically appear at the centre of screen, and resize to 2/3 screen size
+- Add support to numpad Enter input  
+- Add the function to adjust brightness (0-300%)  
+  
+===== 11/9/2017 =====  
+- Remove executable since python crash every time when I try to build it 
+
+=====  6/7/2017 ===== 
 - The lastest source code assigns QT5Agg as the default backend.  
 - Replace os.system with subprocess.run to execute exiftool.  
 - Correct Syntax to copy XMP metadata

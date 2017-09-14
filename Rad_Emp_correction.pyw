@@ -399,7 +399,12 @@ def Plot_Line(DN, reflectance):
     return popt
     
 gdal.AllRegister()
-tk.Tk().withdraw()
+root = tk.Tk()
+root.withdraw()
+ScreenH = root.winfo_screenheight()
+ScreenW = root.winfo_screenwidth()
+WindowH = ScreenH*2/3
+WindowW = ScreenW*2/3
 '''
 Fullfilename=askopenfilename(filetypes=[(
         "Common 8-bit images","*.jpg;*.jpeg;*.png"),("Tiff","*.tif;*.TIF")])
@@ -432,7 +437,9 @@ try:
             "mode 0: draw polygon for regions of interest, right click to finish\n"
             "mode 1: zoom with rectangle, right click to reset extent\n\n"
             "When finish, press ESC to continue.")
-    cv2.namedWindow("Original", cv2.WINDOW_NORMAL)
+    cv2.namedWindow("Original", cv2.WINDOW_NORMAL | cv2.WINDOW_GUI_NORMAL)
+    cv2.resizeWindow("Original", int(WindowW), int(WindowH))
+    cv2.moveWindow("Original", int(ScreenW/2-WindowW/2), int(ScreenH/2-WindowH/2))
     
     cv2.createTrackbar("mode", "Original", 0, 1, mode_switch)
     cv2.createTrackbar("brightness%", "Original", 100, 300, adjust_brightness)
