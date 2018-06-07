@@ -358,7 +358,10 @@ def Plot_Line(DN, reflectance):
     default_font = ''
     for selected_font in fontlist:
         for font_with_path in system_font:
-            font = font_manager.FontProperties(fname=font_with_path).get_name()
+            try:
+                font = font_manager.FontProperties(fname=font_with_path).get_name()
+            except RuntimeError:
+                continue
             if selected_font in font:
                 default_font = selected_font
                 break
@@ -381,7 +384,7 @@ def Plot_Line(DN, reflectance):
     plt.grid(which='major', alpha=0.6, ls='-')
     plt.grid(which='minor', alpha=0.3, ls='--')
     
-    #Plot dsta
+    #Plot data
     plt.plot(DN, reflectance, 'bo', label="Sample Data")
     plt.plot(linex, liney, 'k-', label="Empirical Line")
     plt.annotate("$y=({:.2e})x{:+.2f}$\n$R^2={:.2f}$".format(popt[0], popt[1], R2), 
@@ -439,7 +442,7 @@ try:
     cv2.moveWindow("Original", int(ScreenW/2-WindowW/2), int(ScreenH/2-WindowH/2))
     
     cv2.createTrackbar("mode", "Original", 0, 1, mode_switch)
-    cv2.createTrackbar("brightness%", "Original", 100, 300, adjust_brightness)
+    cv2.createTrackbar("brightness", "Original", 100, 300, adjust_brightness)
     
     cv2.setMouseCallback("Original", draw_polygon)
     
@@ -449,7 +452,7 @@ try:
         if key == 27:
             break
         cv2.getTrackbarPos("mode", "Original")
-        cv2.getTrackbarPos("brightness%", "Original")
+        cv2.getTrackbarPos("brightness", "Original")
     
     cv2.destroyAllWindows()
     
