@@ -1,6 +1,9 @@
 # EmpCorrect_App
 Use empirical line correction method to convert mosaic image to at-surface reflectance image
 # Changelog
+===== 13/4/2020 =====
+- Add the set_draggable attribute to legend to support new matplotlib API  
+  
 ===== 14/9/2017 =====
 - Change ROI window's title to DN and reflectance value
 - Disable opencv QT context menu when right click
