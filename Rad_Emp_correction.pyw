@@ -392,8 +392,12 @@ def Plot_Line(DN, reflectance):
                  textcoords='offset points',
                  verticalalignment='bottom', horizontalalignment='left', 
                  fontsize=14, bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
-    plt.legend(loc='lower center',bbox_to_anchor = (0.76, 0.02), fancybox = True, 
-               fontsize=16, markerscale=1, ncol = 1).draggable()
+    try:
+        plt.legend(loc='lower center',bbox_to_anchor = (0.76, 0.02), fancybox = True, 
+                   fontsize=16, markerscale=1, ncol = 1).draggable()
+    except AttributeError:
+        plt.legend(loc='lower center',bbox_to_anchor = (0.76, 0.02), fancybox = True, 
+                   fontsize=16, markerscale=1, ncol = 1).set_draggable(True)
 
     plt.show()
     return popt
