@@ -1,6 +1,9 @@
 # EmpCorrect_App
 Use empirical line correction method to convert mosaic image to at-surface reflectance image
 # Changelog
+===== 27/1/2021 =====
+- Add the compatibility with new gdal import method  
+  
 ===== 13/4/2020 =====
 - Add the set_draggable attribute to legend to support new matplotlib API  
   
