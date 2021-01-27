@@ -18,7 +18,10 @@ import numpy as np
 import numpy.ma as ma
 from scipy.optimize import curve_fit
 import cv2
-import gdal
+try:
+    import gdal
+except ModuleNotFoundError:
+    from osgeo import gdal
 from osgeo import gdal_array
 import tkinter as tk
 from tkinter.filedialog import askopenfilename
